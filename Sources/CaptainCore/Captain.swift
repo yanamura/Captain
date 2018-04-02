@@ -17,7 +17,7 @@ public final class Captain {
     struct Config: Codable {
         var precommit: String
     }
-n
+
     public init(arguments: [String] = CommandLine.arguments, rootDir: String = Path.current.string) {
         self.arguments = arguments
 
@@ -27,6 +27,7 @@ n
 
             // configファイルを読む
             self.path = Path(rootDir)
+            print(rootDir)
 
             if configPath.exists {
                 // FIXME: try!
@@ -36,31 +37,19 @@ n
 
                 // hookを設定する
                 if hookDirPath.exists {
-                    let precommitHook = hookDirPath + "precommit"
-                    if (!precommitHook.exists) {
-                        // create precommit
-                        //let folder =
-                    }
+                    let folder = try! Folder(path: hookDirPath.string)
+                    let precommitHookFile = try! folder.createFileIfNeeded(withName: "precommit")
                     // ファイルに書き込む
+                    try! precommitHookFile.write(string: """
+                        ## Captain start
+                        \(config.precommit)
+                        ## Captain end
+                    """)
                 }
             }
         } else {
             self.path = Path()
         }
-
-        // TODO:
-        // "install"の場合
-        // configファイルを読む（実行位置直下のみサポート）
-        // hookを設定(とりあえずprecommit)
-        // hookはCaptain precommitを呼ぶだけ（とりあえず）
-        //
-        // "precommit"の場合
-        // configのprecommitに書かれたコマンドを実行
-        //
-        // configファイルの仕様
-        // とりあえずjsonのみ captain.config.json
-        // hooktype : command
-        // hooktype : [command, command]
     }
 
     public func run() throws {
