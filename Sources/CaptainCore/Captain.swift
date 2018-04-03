@@ -3,6 +3,29 @@ import PathKit
 import Files
 
 public final class Captain {
+    public enum Error: Swift.Error, CustomStringConvertible {
+        case configNotFound
+        case invalidConfigData
+        case hookDirNotFound
+        case createHookFileFailed
+        case updateHookFileFailed
+
+        public var description: String {
+            switch self {
+            case .configNotFound:
+                return "config file not founc"
+            case .invalidConfigData:
+                return "config file data is invalid"
+            case .hookDirNotFound:
+                return "git hook directory not founc"
+            case .createHookFileFailed:
+                return "create hook file failed"
+            case .updateHookFileFailed:
+                return "update hook file failed"
+            }
+        }
+    }
+
     private enum CommandType {
         case install
         case uninstall
@@ -41,21 +64,48 @@ public final class Captain {
         switch commandType {
         case .install:
             if configPath.exists {
-                // FIXME: try!
                 // configファイルを読む
-                let data = try! configPath.read()
-                let config = try! JSONDecoder().decode(Config.self, from: data)
+                let configData: Data
+                do {
+                    configData = try configPath.read()
+                } catch {
+                    throw Error.configNotFound
+                }
+                let config: Config
+                do {
+                    config = try JSONDecoder().decode(Config.self, from: configData)
+                } catch {
+                    throw Error.invalidConfigData
+                }
 
                 // hookを設定する
                 if hookDirPath.exists {
-                    let folder = try! Folder(path: hookDirPath.string)
-                    let precommitHookFile = try! folder.createFileIfNeeded(withName: "precommit")
+                    let folder: Folder
+                    do {
+                        folder = try Folder(path: hookDirPath.string)
+                    } catch {
+                        throw Error.hookDirNotFound
+                    }
+                    // TODO: precommit以外
+                    let precommitHookFile: File
+                    do {
+                       precommitHookFile = try folder.createFileIfNeeded(withName: "precommit")
+                    } catch {
+                        throw Error.createHookFileFailed
+                    }
+
+                    // TODO: 既にprecommitがあったら消す
+
                     // ファイルに書き込む
-                    try! precommitHookFile.append(string: """
+                    do {
+                        try precommitHookFile.append(string: """
                         ## Captain start
                         \(config.precommit)
                         ## Captain end
                         """)
+                    } catch {
+                        throw Error.updateHookFileFailed
+                    }
                 }
             } else {
                 assert(false)
