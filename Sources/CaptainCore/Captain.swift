@@ -37,6 +37,7 @@ public final class Captain {
 
     private struct Config: Codable {
         var precommit: String // TODO: suport array
+        // TODO: add other hooks
 
         func propertyValueForName(name: String) -> String {
             switch name {
@@ -86,12 +87,14 @@ public final class Captain {
     // MARK: - Private Methods
     private func install() throws {
         let config = try getConfig()
-        // support other type
+
+        // TODO: support other type
         try setHook(type: .precommit, config: config)
     }
 
     private func uninstall() throws {
-        // TODO:
+        // TODO: support other type
+        try clearHooks(type: .precommit)
     }
 
     private func getConfig() throws -> Config {
