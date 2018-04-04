@@ -35,18 +35,6 @@ public final class Captain {
         case precommit
     }
 
-    private let arguments: [String]
-    private let path: Path
-    private let commandType: CommandType
-
-    private var configPath: Path {
-        return path + "Captain.config.json"
-    }
-
-    private var hookDirPath: Path {
-        return path + ".git/hooks"
-    }
-
     private struct Config: Codable {
         var precommit: String // TODO: suport array
 
@@ -58,6 +46,19 @@ public final class Captain {
                 return ""
             }
         }
+    }
+
+    // MARK: - Private Properties
+    private let arguments: [String]
+    private let path: Path
+    private let commandType: CommandType
+
+    private var configPath: Path {
+        return path + "Captain.config.json"
+    }
+
+    private var hookDirPath: Path {
+        return path + ".git/hooks"
     }
 
     // MARK: - Public Methods
@@ -76,14 +77,22 @@ public final class Captain {
         // install Captain.config.jsonと.gitはカレントディレクトリにあるとする
         switch commandType {
         case .install:
-            let config = try getConfig()
-            try setHook(type: .precommit, config: config)
+            try install()
         case .uninstall:
-            break
+            try uninstall()
         }
     }
 
     // MARK: - Private Methods
+    private func install() throws {
+        let config = try getConfig()
+        try setHook(type: .precommit, config: config)
+    }
+
+    private func uninstall() throws {
+        // TODO:
+    }
+
     private func getConfig() throws -> Config {
         if configPath.exists {
             let configData: Data
