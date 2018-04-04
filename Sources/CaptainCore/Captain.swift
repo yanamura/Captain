@@ -65,7 +65,6 @@ public final class Captain {
         self.arguments = arguments
         self.path = Path(rootDir)
 
-        // TODO: move to other method
         if let firstArgument = arguments.dropFirst().first, firstArgument == "install" {
             commandType = .install
         } else {
@@ -122,6 +121,8 @@ public final class Captain {
                 throw Error.createHookFileFailed
             }
 
+            try changePermission(posixPersmittion: 0o755, path: hookFile.path)
+
             // TODO: 既にprecommitがあったら消す
 
             do {
@@ -136,5 +137,10 @@ public final class Captain {
         } else {
             throw Error.hookDirNotFound
         }
+    }
+
+    private func changePermission(posixPersmittion: Int, path: String) throws {
+        let fm = FileManager.default
+        try fm.setAttributes([FileAttributeKey.posixPermissions: posixPersmittion], ofItemAtPath: path)
     }
 }

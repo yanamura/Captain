@@ -41,5 +41,6 @@ class CaptainTests: XCTestCase {
         ## Captain end
         """
         XCTAssertTrue(hookFileString.hasSuffix(expectString))
+        XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
     }
 }
