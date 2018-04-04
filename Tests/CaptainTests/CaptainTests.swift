@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-import CaptainCore
+@testable import CaptainCore
 import Tempry
 import Files
 
@@ -26,21 +26,34 @@ class CaptainTests: XCTestCase {
         try! currentDir.delete()
     }
 
-    func test() {
+    func test_install_precommit() {
         try! configFile.write(string: "{\"precommit\": \"echo Hello\"}")
 
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
         try! captain.run()
 
         XCTAssertTrue(hooksFolder.containsFile(named: "precommit"))
+        let extractStrings = try! captain.extractHookScript(type: .precommit)
+        XCTAssertEqual(extractStrings[0], "echo Hello")
         let hookFile = try! hooksFolder.file(named: "precommit")
-        let hookFileString = try! hookFile.readAsString()
-        let expectString = """
+        XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
+    }
+
+    func test_override_install() {
+        let hookFile = try! hooksFolder.createFile(named: "precommit")
+        try! hookFile.write(string: """
         ## Captain start
-        echo Hello
+        Hello World
         ## Captain end
-        """
-        XCTAssertTrue(hookFileString.hasSuffix(expectString))
+        """)
+
+        try! configFile.write(string: "{\"precommit\": \"echo Hello\"}")
+        let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
+        try! captain.run()
+
+        XCTAssertTrue(hooksFolder.containsFile(named: "precommit"))
+        let extractStrings = try! captain.extractHookScript(type: .precommit)
+        XCTAssertEqual(extractStrings[0], "echo Hello")
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
     }
 }
