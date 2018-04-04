@@ -4,6 +4,24 @@ import XCTest
 import Tempry
 import Files
 
+// MARK: - Helper Extensions for Test
+extension Captain {
+    func extractHookScript(type: HookType, hookFile: File) throws -> [String] {
+        let hookFileDataString = try hookFile.readAsString()
+        return try NSRegularExpression(pattern: "## Captain start\n(.+)\n## Captain end").extractMatches(text: hookFileDataString)
+    }
+}
+
+extension NSRegularExpression {
+    func extractMatches(text: String) -> [String] {
+        let results = matches(in: text, range: NSRange(text.startIndex..., in: text))
+        return results.map {
+            return (text as NSString).substring(with: $0.range(at: 1))
+        }
+    }
+}
+
+// MARK: - Tests
 class CaptainTests: XCTestCase {
     var currentDir: Folder!
     var configFile: File!
@@ -33,9 +51,9 @@ class CaptainTests: XCTestCase {
         try! captain.run()
 
         XCTAssertTrue(hooksFolder.containsFile(named: "precommit"))
-        let extractStrings = try! captain.extractHookScript(type: .precommit)
-        XCTAssertEqual(extractStrings[0], "echo Hello")
         let hookFile = try! hooksFolder.file(named: "precommit")
+        let extractStrings = try! captain.extractHookScript(type: .precommit, hookFile: hookFile)
+        XCTAssertEqual(extractStrings[0], "echo Hello")
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
     }
 
@@ -52,7 +70,7 @@ class CaptainTests: XCTestCase {
         try! captain.run()
 
         XCTAssertTrue(hooksFolder.containsFile(named: "precommit"))
-        let extractStrings = try! captain.extractHookScript(type: .precommit)
+        let extractStrings = try! captain.extractHookScript(type: .precommit, hookFile: hookFile)
         XCTAssertEqual(extractStrings[0], "echo Hello")
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
     }

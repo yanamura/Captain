@@ -119,7 +119,7 @@ public final class Captain {
         if hookDirPath.exists {
             let hookFile = try getHookFile(type: type)
 
-            try changePermission(posixPersmittion: 0o755, path: hookFile.path)
+            try FileManager.default.changePermission(posixPersmittion: 0o755, path: hookFile.path)
 
             try clearHooks(type: type)
 
@@ -154,44 +154,25 @@ public final class Captain {
         return hookFile
     }
 
-    // TODO: extension
-    private func changePermission(posixPersmittion: Int, path: String) throws {
-        let fm = FileManager.default
-        try fm.setAttributes([FileAttributeKey.posixPermissions: posixPersmittion], ofItemAtPath: path)
-    }
-
-    // TODO: remove from here
-    func extractHookScript(type: HookType) throws -> [String] {
-        let hookFile = try getHookFile(type: type)
-        let hookFileDataString = try hookFile.readAsString()
-        return extractMatches(regex: "## Captain start\n(.+)\n## Captain end", text: hookFileDataString)
-    }
-
-    func extractMatches(regex: String, text: String) -> [String] {
-        do {
-            let regex = try NSRegularExpression(pattern: regex)
-            let results = regex.matches(in: text, range: NSRange(text.startIndex..., in: text))
-            return results.map {
-                return (text as NSString).substring(with: $0.range(at: 1))
-            }
-        } catch {
-            return []
-        }
-    }
-
-    func clearHooks(type: HookType) throws {
+    private func clearHooks(type: HookType) throws {
         let hookFile = try getHookFile(type: type)
         let hookFileDataString = try hookFile.readAsString()
         let resultString = removeMatches(regex: "## Captain start\n(.+)\n## Captain end", text: hookFileDataString)
         try hookFile.write(string: resultString)
     }
 
-    func removeMatches(regex: String, text: String) -> String {
+    private func removeMatches(regex: String, text: String) -> String {
         do {
             let regex = try NSRegularExpression(pattern: regex)
             return regex.stringByReplacingMatches(in: text, range: NSRange(text.startIndex..., in: text), withTemplate: "")
         } catch {
             return text
         }
+    }
+}
+
+private extension FileManager {
+    func changePermission(posixPersmittion: Int, path: String) throws {
+        try setAttributes([FileAttributeKey.posixPermissions: posixPersmittion], ofItemAtPath: path)
     }
 }
