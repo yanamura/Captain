@@ -4,6 +4,7 @@ import Files
 
 public final class Captain {
     public enum Error: Swift.Error, CustomStringConvertible {
+        case jsonDecodeFailed
         case configNotFound
         case invalidConfigData
         case hookDirNotFound
@@ -12,6 +13,8 @@ public final class Captain {
 
         public var description: String {
             switch self {
+            case .jsonDecodeFailed:
+                return "json decode failed"
             case .configNotFound:
                 return "config file not founc"
             case .invalidConfigData:
@@ -35,14 +38,39 @@ public final class Captain {
         case precommit
     }
 
-    private struct Config: Codable {
-        var precommit: String // TODO: suport array
+    private enum HookScriptValue: Decodable {
+        case string(String)
+        case array([String])
+
+        init(from decoder: Decoder) throws {
+            if let value = try? decoder.singleValueContainer().decode(String.self)  {
+                self = .string(value)
+                return
+            }
+            if let value = try? decoder.singleValueContainer().decode([String].self)  {
+                self = .array(value)
+                return
+            }
+
+            throw Error.jsonDecodeFailed
+        }
+    }
+
+    private struct Config: Decodable {
+        var precommit: HookScriptValue
         // TODO: add other hooks
 
         func propertyValueForName(name: String) -> String {
             switch name {
             case "precommit":
-                return precommit
+                switch precommit {
+                case let .string(string):
+                    return string
+                case let .array(array):
+                    return array.reduce("") { (joined, string) in
+                        return joined + string + "\n"
+                    }.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
             default:
                 return ""
             }
