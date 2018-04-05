@@ -60,6 +60,15 @@ public final class Captain {
         var precommit: HookScriptValue
         // TODO: add other hooks
 
+        enum Key: String, CodingKey {
+            case precommit = "pre-commit"
+        }
+
+        init(from decder: Decoder) throws {
+            let container = try decder.container(keyedBy: Key.self)
+            self.precommit = try container.decode(HookScriptValue.self, forKey: .precommit)
+        }
+
         func propertyValueForName(name: String) -> String {
             switch name {
             case "precommit":

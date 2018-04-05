@@ -43,7 +43,7 @@ class CaptainTests: XCTestCase {
     }
 
     func test_install_precommit_withStringScript() {
-        try! configFile.write(string: "{\"precommit\": \"echo Hello\"}")
+        try! configFile.write(string: "{\"pre-commit\": \"echo Hello\"}")
 
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
         try! captain.run()
@@ -56,7 +56,7 @@ class CaptainTests: XCTestCase {
     }
 
     func test_install_precommit_withArrayScript() {
-        try! configFile.write(string: "{\"precommit\": [\"echo Hello\",\"echo World\"]}")
+        try! configFile.write(string: "{\"pre-commit\": [\"echo Hello\",\"echo World\"]}")
 
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
         try! captain.run()
@@ -76,7 +76,7 @@ class CaptainTests: XCTestCase {
         ## Captain end
         """)
 
-        try! configFile.write(string: "{\"precommit\": \"echo Hello\"}")
+        try! configFile.write(string: "{\"pre-commit\": \"echo Hello\"}")
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
         try! captain.run()
 

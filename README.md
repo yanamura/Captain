@@ -1,3 +1,46 @@
 # Captain
 
-A description of this package.
+Captain makes easy to manage git hooks
+
+## Install
+
+### Using [Mint](https://github.com/yonaskolb/Mint)
+
+```
+$ mint run yanamura3/Captain
+```
+
+## Usage
+
+create `Captain.config.json` onproject root directory.
+
+```
+/ProjectDir
+  /.git
+  .gitignore
+  Captain.config.json
+```
+.git directory and Captain.config.json file should be in same location.
+
+### Captain.config.json
+
+```
+{
+  "pre-commit": "swiftformat ."
+}
+```
+
+or
+
+```
+{
+  "pre-commit": [
+    "swiftformat .",
+    "git add ."
+  ]
+}
+```
+
+### supported hooks
+
+- pre-commit
