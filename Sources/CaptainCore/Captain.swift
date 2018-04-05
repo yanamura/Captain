@@ -35,7 +35,7 @@ public final class Captain {
     }
 
     enum HookType: String {
-        case precommit
+        case precommit = "pre-commit"
     }
 
     private enum HookScriptValue: Decodable {
@@ -157,7 +157,7 @@ public final class Captain {
             do {
                 try hookFile.append(string: """
                     ## Captain start
-                    \(config.propertyValueForName(name: type.rawValue))
+                    \(config.propertyValueForName(name: type.rawValue.replacingOccurrences(of: "-", with: "")))
                     ## Captain end
                     """)
             } catch {

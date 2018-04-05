@@ -48,8 +48,8 @@ class CaptainTests: XCTestCase {
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
         try! captain.run()
 
-        XCTAssertTrue(hooksFolder.containsFile(named: "precommit"))
-        let hookFile = try! hooksFolder.file(named: "precommit")
+        XCTAssertTrue(hooksFolder.containsFile(named: "pre-commit"))
+        let hookFile = try! hooksFolder.file(named: "pre-commit")
         let extractStrings = try! captain.extractHookScript(type: .precommit, hookFile: hookFile)
         XCTAssertEqual(extractStrings[0], "echo Hello")
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
@@ -61,15 +61,15 @@ class CaptainTests: XCTestCase {
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
         try! captain.run()
 
-        XCTAssertTrue(hooksFolder.containsFile(named: "precommit"))
-        let hookFile = try! hooksFolder.file(named: "precommit")
+        XCTAssertTrue(hooksFolder.containsFile(named: "pre-commit"))
+        let hookFile = try! hooksFolder.file(named: "pre-commit")
         let extractStrings = try! captain.extractHookScript(type: .precommit, hookFile: hookFile)
         XCTAssertEqual(extractStrings[0], "echo Hello\necho World")
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
     }
 
     func test_override_install() {
-        let hookFile = try! hooksFolder.createFile(named: "precommit")
+        let hookFile = try! hooksFolder.createFile(named: "pre-commit")
         try! hookFile.write(string: """
         ## Captain start
         Hello World
@@ -80,7 +80,7 @@ class CaptainTests: XCTestCase {
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
         try! captain.run()
 
-        XCTAssertTrue(hooksFolder.containsFile(named: "precommit"))
+        XCTAssertTrue(hooksFolder.containsFile(named: "pre-commit"))
         let extractStrings = try! captain.extractHookScript(type: .precommit, hookFile: hookFile)
         XCTAssertEqual(extractStrings[0], "echo Hello")
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: hookFile.path))
