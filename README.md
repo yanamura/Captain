@@ -7,11 +7,12 @@ Captain makes easy to manage git hooks
 ### Using [Mint](https://github.com/yonaskolb/Mint)
 
 ```
-$ mint run yanamura3/Captain
+$ mint install yanamura3/Captain
 ```
 
 ## Usage
 
+### Configuration
 create `Captain.config.json` onproject root directory.
 
 ```
@@ -22,7 +23,7 @@ create `Captain.config.json` onproject root directory.
 ```
 .git directory and Captain.config.json file should be in same location.
 
-### Captain.config.json
+#### Captain.config.json
 
 ```
 {
@@ -41,6 +42,14 @@ or
 }
 ```
 
-### supported hooks
+#### supported hooks
 
 - pre-commit
+
+### Set Git Hooks
+
+run this script
+
+```
+$ mint run yanamura3/Captain "captain install"
+```

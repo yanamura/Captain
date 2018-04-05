@@ -30,6 +30,7 @@ public final class Captain {
     }
 
     private enum CommandType {
+        case undefined
         case install
         case uninstall
     }
@@ -106,14 +107,17 @@ public final class Captain {
 
         if let firstArgument = arguments.dropFirst().first, firstArgument == "install" {
             commandType = .install
-        } else {
+        } else if let firstArgument = arguments.dropFirst().first, firstArgument == "uninstall" {
             commandType = .uninstall
+        } else {
+            commandType = .undefined
         }
     }
 
     public func run() throws {
-        // install Captain.config.jsonと.gitはカレントディレクトリにあるとする
         switch commandType {
+        case .undefined:
+            break
         case .install:
             try install()
         case .uninstall:
