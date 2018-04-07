@@ -32,8 +32,49 @@ public final class Captain {
         }
     }
 
-    enum HookType: String {
+    enum HookType: String, CodingKey {
+        case applypatchmsg = "applypatch-msg"
+        case preapplypatch = "pre-applypatch"
+        case postapplypatch = "post-applypatch"
         case precommit = "pre-commit"
+        case preparecommitmsg = "preparecommitmsg"
+        case commitmsg = "commit-msg"
+        case postcommit = "post-commit"
+        case prerebase = "pre-rebase"
+        case postcheckout = "post-checkout"
+        case postmerge = "post-merge"
+        case prepush = "pre-push"
+        case prereceive = "pre-receive"
+        case update = "update"
+        case postreceive = "post-receive"
+        case postupdate = "post-update"
+        case pushtocheckout = "push-to-checkout"
+        case preautogc = "pre-auto-gc"
+        case postrewrite = "post-rewrite"
+        case sendemailvalidate = "sendemail-validate"
+
+        // TODO: Swift4.2 CaseIteratable
+        static var allCases: [HookType] = [
+            .applypatchmsg,
+            .preapplypatch,
+            .postapplypatch,
+            .precommit,
+            .preparecommitmsg,
+            .commitmsg,
+            .postcommit,
+            .prerebase,
+            .postcheckout,
+            .postmerge,
+            .prepush,
+            .prereceive,
+            .update,
+            .postreceive,
+            .postupdate,
+            .pushtocheckout,
+            .preautogc,
+            .postrewrite,
+            .sendemailvalidate,
+        ]
     }
 
     private enum CommandType {
@@ -61,29 +102,158 @@ public final class Captain {
     }
 
     private struct Config: Decodable {
-        var precommit: HookScriptValue
-        // TODO: add other hooks
-
-        enum Key: String, CodingKey {
-            case precommit = "pre-commit"
-        }
+        var applypatchmsg: HookScriptValue?
+        var preapplypatch: HookScriptValue?
+        var postapplypatch: HookScriptValue?
+        var precommit: HookScriptValue?
+        var preparecommitmsg: HookScriptValue?
+        var commitmsg: HookScriptValue?
+        var postcommit: HookScriptValue?
+        var prerebase: HookScriptValue?
+        var postcheckout: HookScriptValue?
+        var postmerge: HookScriptValue?
+        var prepush: HookScriptValue?
+        var prereceive: HookScriptValue?
+        var update: HookScriptValue?
+        var postreceive: HookScriptValue?
+        var postupdate: HookScriptValue?
+        var pushtocheckout: HookScriptValue?
+        var preautogc: HookScriptValue?
+        var postrewrite: HookScriptValue?
+        var sendemailvalidate: HookScriptValue?
 
         init(from decder: Decoder) throws {
-            let container = try decder.container(keyedBy: Key.self)
-            self.precommit = try container.decode(HookScriptValue.self, forKey: .precommit)
+            let container = try decder.container(keyedBy: HookType.self)
+            self.applypatchmsg = try? container.decode(HookScriptValue.self, forKey: .applypatchmsg)
+            self.preapplypatch = try? container.decode(HookScriptValue.self, forKey: .preapplypatch)
+            self.postapplypatch = try? container.decode(HookScriptValue.self, forKey: .postapplypatch)
+            self.precommit = try? container.decode(HookScriptValue.self, forKey: .precommit)
+            self.preparecommitmsg = try? container.decode(HookScriptValue.self, forKey: .preparecommitmsg)
+            self.commitmsg = try? container.decode(HookScriptValue.self, forKey: .commitmsg)
+            self.postcommit = try? container.decode(HookScriptValue.self, forKey: .postcommit)
+            self.prerebase = try? container.decode(HookScriptValue.self, forKey: .prerebase)
+            self.postcheckout = try? container.decode(HookScriptValue.self, forKey: .postcheckout)
+            self.postmerge = try? container.decode(HookScriptValue.self, forKey: .postmerge)
+            self.prepush = try? container.decode(HookScriptValue.self, forKey: .prepush)
+            self.prereceive = try? container.decode(HookScriptValue.self, forKey: .prereceive)
+            self.update = try? container.decode(HookScriptValue.self, forKey: .update)
+            self.postreceive = try? container.decode(HookScriptValue.self, forKey: .postreceive)
+            self.postupdate = try? container.decode(HookScriptValue.self, forKey: .postupdate)
+            self.pushtocheckout = try? container.decode(HookScriptValue.self, forKey: .pushtocheckout)
+            self.preautogc = try? container.decode(HookScriptValue.self, forKey: .preautogc)
+            self.postrewrite = try? container.decode(HookScriptValue.self, forKey: .postrewrite)
+            self.sendemailvalidate = try? container.decode(HookScriptValue.self, forKey: .sendemailvalidate)
         }
 
         func propertyValueForName(name: String) -> String {
-            switch name {
-            case "precommit":
-                switch precommit {
+            let hookScriptValueToString: (HookScriptValue)->String = {
+                (value: HookScriptValue) -> String in
+                switch value {
                 case let .string(string):
                     return string
                 case let .array(array):
                     return array.reduce("") { (joined, string) in
                         return joined + string + "\n"
-                    }.trimmingCharacters(in: .whitespacesAndNewlines)
+                        }.trimmingCharacters(in: .whitespacesAndNewlines)
                 }
+            }
+
+            switch name {
+            case "applypatchmsg":
+                if let applypatchmsg = applypatchmsg {
+                    return hookScriptValueToString(applypatchmsg)
+                }
+                return ""
+            case "preapplypatch":
+                if let preapplypatch = preapplypatch {
+                    return hookScriptValueToString(preapplypatch)
+                }
+                return ""
+            case "postapplypatch":
+                if let postapplypatch = postapplypatch {
+                    return hookScriptValueToString(postapplypatch)
+                }
+                return ""
+            case "precommit":
+                if let precommit = precommit {
+                    return hookScriptValueToString(precommit)
+                }
+                return ""
+            case "preparecommitmsg":
+                if let preparecommiting = preparecommitmsg {
+                    return hookScriptValueToString(preparecommiting)
+                }
+                return ""
+            case "commitmsg":
+                if let commitmsg = commitmsg {
+                    return hookScriptValueToString(commitmsg)
+                }
+                return ""
+            case "postcommit":
+                if let postcommit = postcommit {
+                    return hookScriptValueToString(postcommit)
+                }
+                return ""
+            case "prerebase":
+                if let prerebase = prerebase {
+                    return hookScriptValueToString(prerebase)
+                }
+                return ""
+            case "postcheckout":
+                if let postcheckout = postcheckout {
+                    return hookScriptValueToString(postcheckout)
+                }
+                return ""
+            case "postmerge":
+                if let postmerge = postmerge {
+                    return hookScriptValueToString(postmerge)
+                }
+                return ""
+            case "prepush":
+                if let prepush = prepush {
+                    return hookScriptValueToString(prepush)
+                }
+                return ""
+            case "prereceive":
+                if let prereceive = prereceive {
+                    return hookScriptValueToString(prereceive)
+                }
+                return ""
+            case "update":
+                if let update = update {
+                    return hookScriptValueToString(update)
+                }
+                return ""
+            case "postreceive":
+                if let postreceive = postreceive {
+                    return hookScriptValueToString(postreceive)
+                }
+                return ""
+            case "postupdate":
+                if let postupdate = postupdate {
+                    return hookScriptValueToString(postupdate)
+                }
+                return ""
+            case "pushtocheckout":
+                if let pushtocheckout = pushtocheckout {
+                    return hookScriptValueToString(pushtocheckout)
+                }
+                return ""
+            case "preautogc":
+                if let preautogc = preautogc {
+                    return hookScriptValueToString(preautogc)
+                }
+                return ""
+            case "postrewrite":
+                if let postrewrite = postrewrite {
+                    return hookScriptValueToString(postrewrite)
+                }
+                return ""
+            case "sendemailvalidate":
+                if let sendemailvalidate = sendemailvalidate {
+                    return hookScriptValueToString(sendemailvalidate)
+                }
+                return ""
             default:
                 return ""
             }
@@ -132,13 +302,15 @@ public final class Captain {
     private func install() throws {
         let config = try getConfig()
 
-        // TODO: support other type
-        try setHook(type: .precommit, config: config)
+        try HookType.allCases.forEach { (type) in
+            try setHook(type: type, config: config)
+        }
     }
 
     private func uninstall() throws {
-        // TODO: support other type
-        try clearHooks(type: .precommit)
+        try HookType.allCases.forEach { (type) in
+            try clearHooks(type: type)
+        }
     }
 
     private func getConfig() throws -> Config {
