@@ -50,6 +50,7 @@ or
 
 run this script
 
+#### Using [Mint](https://github.com/yonaskolb/Mint)
 ```
 $ mint run yanamura3/Captain "captain install"
 ```

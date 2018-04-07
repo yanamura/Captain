@@ -2,6 +2,9 @@ import Foundation
 import PathKit
 import Files
 
+let CAPTAIN_SCRIPTS_START_ID = "## Captain start"
+let CAPTAIN_SCRIPTS_END_ID = "## Captain end"
+
 public final class Captain {
     public enum Error: Swift.Error, CustomStringConvertible {
         case jsonDecodeFailed
@@ -29,14 +32,14 @@ public final class Captain {
         }
     }
 
+    enum HookType: String {
+        case precommit = "pre-commit"
+    }
+
     private enum CommandType {
         case undefined
         case install
         case uninstall
-    }
-
-    enum HookType: String {
-        case precommit = "pre-commit"
     }
 
     private enum HookScriptValue: Decodable {
@@ -169,9 +172,9 @@ public final class Captain {
 
             do {
                 try hookFile.append(string: """
-                    ## Captain start
+                    \(CAPTAIN_SCRIPTS_START_ID)
                     \(config.propertyValueForName(name: type.rawValue.replacingOccurrences(of: "-", with: "")))
-                    ## Captain end
+                    \(CAPTAIN_SCRIPTS_END_ID)
                     """)
             } catch {
                 throw Error.updateHookFileFailed
@@ -201,13 +204,13 @@ public final class Captain {
     private func clearHooks(type: HookType) throws {
         let hookFile = try getHookFile(type: type)
         let hookFileDataString = try hookFile.readAsString()
-        let resultString = removeMatches(regex: "## Captain start\n(.+)\n## Captain end", text: hookFileDataString)
+        let resultString = removeMatches(regex: "\(CAPTAIN_SCRIPTS_START_ID)\n(.+)\n\(CAPTAIN_SCRIPTS_END_ID)", options: .dotMatchesLineSeparators, text: hookFileDataString)
         try hookFile.write(string: resultString)
     }
 
-    private func removeMatches(regex: String, text: String) -> String {
+    private func removeMatches(regex: String, options: NSRegularExpression.Options = [], text: String) -> String {
         do {
-            let regex = try NSRegularExpression(pattern: regex)
+            let regex = try NSRegularExpression(pattern: regex, options: options)
             return regex.stringByReplacingMatches(in: text, range: NSRange(text.startIndex..., in: text), withTemplate: "")
         } catch {
             return text
