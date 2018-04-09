@@ -15,9 +15,12 @@ extension Captain {
 extension NSRegularExpression {
     func extractMatches(text: String) -> [String] {
         let results = matches(in: text, range: NSRange(text.startIndex..., in: text))
-        print(results)
         return results.map {
-            return (text as NSString).substring(with: $0.range(at: 1))
+            if let range = Range($0.range(at: 1), in: text) {
+                return String(text[range.lowerBound..<range.upperBound])
+            } else {
+                return text
+            }
         }
     }
 }
