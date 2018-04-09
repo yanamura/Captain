@@ -1,4 +1,5 @@
 # Captain
+[![Build Status](https://travis-ci.org/yanamura/Captain.svg?branch=master)](https://travis-ci.org/yanamura/Captain)
 
 Captain makes easy to manage git hooks
 
