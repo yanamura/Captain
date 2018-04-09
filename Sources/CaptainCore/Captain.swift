@@ -392,6 +392,6 @@ public final class Captain {
 
 private extension FileManager {
     func changePermission(posixPersmittion: Int, path: String) throws {
-        try setAttributes([FileAttributeKey.posixPermissions: posixPersmittion], ofItemAtPath: path)
+        try setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: posixPersmittion)], ofItemAtPath: path)
     }
 }
