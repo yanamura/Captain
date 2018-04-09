@@ -8,7 +8,7 @@ Captain makes easy to manage git hooks
 ### Using [Mint](https://github.com/yonaskolb/Mint)
 
 ```
-$ mint install yanamura3/Captain
+$ mint install yanamura/Captain
 ```
 
 ## Usage
@@ -71,5 +71,5 @@ run this script
 
 #### Using [Mint](https://github.com/yonaskolb/Mint)
 ```
-$ mint run yanamura3/Captain "captain install"
+$ mint run yanamura/Captain "captain install"
 ```
