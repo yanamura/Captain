@@ -101,4 +101,11 @@ class CaptainTests: XCTestCase {
         let extractStrings = try! captain.extractHookScript(type: .precommit, hookFile: hookFile)
         XCTAssertEqual(extractStrings.count, 0)
     }
+
+    static var allTests = [
+        ("test_install_precommit_withStringScript", test_install_precommit_withStringScript),
+        ("test_install_precommit_withArrayScript", test_install_precommit_withArrayScript),
+        ("test_override_install", test_override_install),
+        ("test_uninstall", test_uninstall),
+    ]
 }
