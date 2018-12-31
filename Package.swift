@@ -7,9 +7,9 @@ let package = Package(
     name: "Captain",
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/kylef/PathKit.git", from: "0.9.1"),
+        .package(url: "https://github.com/kylef/PathKit.git", from: "0.9.2"),
         .package(url: "https://github.com/yanamura3/Tempry.git", from: "0.1.1"),
-        .package(url: "https://github.com/johnsundell/files.git", from: "2.1.0"),
+        .package(url: "https://github.com/johnsundell/files.git", from: "2.2.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
