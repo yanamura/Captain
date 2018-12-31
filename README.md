@@ -1,15 +1,15 @@
 # Captain
-[![Build Status](https://travis-ci.org/yanamura/Captain.svg?branch=master)](https://travis-ci.org/yanamura/Captain)
 
 <p>
+  <a href="https://travis-ci.org/yanamura/Captain">
+    <img src="https://travis-ci.org/yanamura/Captain.svg?branch=master" alt="travis">
+  </a>
   <a href="https://swift.org">
     <img src="http://img.shields.io/badge/swift-4.2-brightgreen.svg" alt="Swift 4.2">
   </a>
 </p>
 
 Captain makes easy to manage git hooks
-
-## 
 
 ## Install
 
