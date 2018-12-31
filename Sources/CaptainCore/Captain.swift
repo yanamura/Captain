@@ -32,7 +32,7 @@ public final class Captain {
         }
     }
 
-    enum HookType: String, CodingKey {
+    enum HookType: String, CodingKey, CaseIterable {
         case applypatchmsg = "applypatch-msg"
         case preapplypatch = "pre-applypatch"
         case postapplypatch = "post-applypatch"
@@ -52,29 +52,6 @@ public final class Captain {
         case preautogc = "pre-auto-gc"
         case postrewrite = "post-rewrite"
         case sendemailvalidate = "sendemail-validate"
-
-        // TODO: Swift4.2 CaseIteratable
-        static var allCases: [HookType] = [
-            .applypatchmsg,
-            .preapplypatch,
-            .postapplypatch,
-            .precommit,
-            .preparecommitmsg,
-            .commitmsg,
-            .postcommit,
-            .prerebase,
-            .postcheckout,
-            .postmerge,
-            .prepush,
-            .prereceive,
-            .update,
-            .postreceive,
-            .postupdate,
-            .pushtocheckout,
-            .preautogc,
-            .postrewrite,
-            .sendemailvalidate,
-        ]
     }
 
     private enum CommandType {
