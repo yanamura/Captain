@@ -16,11 +16,18 @@ Captain makes easy to manage git hooks
 
 ## Install
 
-### Using [Mint](https://github.com/yonaskolb/Mint)
-
+### Using Mint
+if you want to install globally, use [Mint](https://github.com/yonaskolb/Mint)
 ```
 $ mint install yanamura/Captain
 ```
+### build yourself
+```
+$ git clone https://github.com/yanamura/Captain
+$ cd Captain
+$ swift build -c release
+```
+executable binary will created to ./build/release/captain
 
 ## Usage
 
@@ -77,10 +84,23 @@ or
 - sendemail-validat
 
 ### Set Git Hooks
-
-run this script
+```
+$ captain install
+```
 
 #### Using [Mint](https://github.com/yonaskolb/Mint)
 ```
 $ mint run yanamura/Captain "captain install"
+```
+
+#### Using cloned repository
+```
+$ git clone https://github.com/yanamura/Captain
+$ cd Captain
+$ swift run captain install
+```
+
+### Unset Git Hooks
+```
+$ captain uninstall
 ```
