@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "Captain",
+    products: [
+        .executable(name: "captain", targets: ["Captain"])
+    ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/kylef/PathKit.git", from: "0.9.2"),
