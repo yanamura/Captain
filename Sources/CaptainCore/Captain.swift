@@ -6,7 +6,7 @@ let CAPTAIN_SCRIPTS_START_ID = "## Captain start"
 let CAPTAIN_SCRIPTS_END_ID = "## Captain end"
 
 public final class Captain {
-    public enum Error: Swift.Error, CustomStringConvertible {
+    public enum CaptainError: Error, CustomStringConvertible {
         case jsonDecodeFailed
         case configNotFound
         case invalidConfigData
@@ -23,7 +23,7 @@ public final class Captain {
             case .invalidConfigData:
                 return "config file data is invalid"
             case .hookDirNotFound:
-                return "git hook directory not founc"
+                return "git hook directory not found"
             case .createHookFileFailed:
                 return "create hook file failed"
             case .updateHookFileFailed:
@@ -74,7 +74,7 @@ public final class Captain {
                 return
             }
 
-            throw Error.jsonDecodeFailed
+            throw CaptainError.jsonDecodeFailed
         }
     }
 
@@ -296,18 +296,18 @@ public final class Captain {
             do {
                 configData = try configPath.read()
             } catch {
-                throw Error.configNotFound
+                throw CaptainError.configNotFound
             }
 
             let config: Config
             do {
                 config = try JSONDecoder().decode(Config.self, from: configData)
             } catch {
-                throw Error.invalidConfigData
+                throw CaptainError.invalidConfigData
             }
             return config
         } else {
-            throw Error.configNotFound
+            throw CaptainError.configNotFound
         }
     }
 
@@ -326,10 +326,10 @@ public final class Captain {
                     \(CAPTAIN_SCRIPTS_END_ID)
                     """)
             } catch {
-                throw Error.updateHookFileFailed
+                throw CaptainError.updateHookFileFailed
             }
         } else {
-            throw Error.hookDirNotFound
+            throw CaptainError.hookDirNotFound
         }
     }
 
@@ -338,14 +338,14 @@ public final class Captain {
         do {
             folder = try Folder(path: hookDirPath.string)
         } catch {
-            throw Error.hookDirNotFound
+            throw CaptainError.hookDirNotFound
         }
 
         let hookFile: File
         do {
             hookFile = try folder.createFileIfNeeded(withName: type.rawValue)
         } catch {
-            throw Error.createHookFileFailed
+            throw CaptainError.createHookFileFailed
         }
         return hookFile
     }
