@@ -5,5 +5,7 @@ let main = Captain()
 do {
     try main.run()
 } catch {
-    print("error")
+    if let error = error as? Captain.CaptainError {
+        print("Error::\(error.description)")
+    }
 }
