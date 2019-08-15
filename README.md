@@ -27,7 +27,7 @@ $ git clone https://github.com/yanamura/Captain
 $ cd Captain
 $ swift build -c release
 ```
-executable binary will created to ./build/release/captain
+executable binary will be created to ./build/release/captain
 
 ## Usage
 
