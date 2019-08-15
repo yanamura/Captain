@@ -1,6 +1,6 @@
+import Files
 import Foundation
 import PathKit
-import Files
 
 let CAPTAIN_SCRIPTS_START_ID = "## Captain start"
 let CAPTAIN_SCRIPTS_END_ID = "## Captain end"
@@ -65,11 +65,11 @@ public final class Captain {
         case array([String])
 
         init(from decoder: Decoder) throws {
-            if let value = try? decoder.singleValueContainer().decode(String.self)  {
+            if let value = try? decoder.singleValueContainer().decode(String.self) {
                 self = .string(value)
                 return
             }
-            if let value = try? decoder.singleValueContainer().decode([String].self)  {
+            if let value = try? decoder.singleValueContainer().decode([String].self) {
                 self = .array(value)
                 return
             }
@@ -103,9 +103,11 @@ public final class Captain {
             let container = try decder.container(keyedBy: HookType.self)
             self.applypatchmsg = try? container.decode(HookScriptValue.self, forKey: .applypatchmsg)
             self.preapplypatch = try? container.decode(HookScriptValue.self, forKey: .preapplypatch)
-            self.postapplypatch = try? container.decode(HookScriptValue.self, forKey: .postapplypatch)
+            self.postapplypatch = try? container.decode(
+                HookScriptValue.self, forKey: .postapplypatch)
             self.precommit = try? container.decode(HookScriptValue.self, forKey: .precommit)
-            self.preparecommitmsg = try? container.decode(HookScriptValue.self, forKey: .preparecommitmsg)
+            self.preparecommitmsg = try? container.decode(
+                HookScriptValue.self, forKey: .preparecommitmsg)
             self.commitmsg = try? container.decode(HookScriptValue.self, forKey: .commitmsg)
             self.postcommit = try? container.decode(HookScriptValue.self, forKey: .postcommit)
             self.prerebase = try? container.decode(HookScriptValue.self, forKey: .prerebase)
@@ -116,24 +118,26 @@ public final class Captain {
             self.update = try? container.decode(HookScriptValue.self, forKey: .update)
             self.postreceive = try? container.decode(HookScriptValue.self, forKey: .postreceive)
             self.postupdate = try? container.decode(HookScriptValue.self, forKey: .postupdate)
-            self.pushtocheckout = try? container.decode(HookScriptValue.self, forKey: .pushtocheckout)
+            self.pushtocheckout = try? container.decode(
+                HookScriptValue.self, forKey: .pushtocheckout)
             self.preautogc = try? container.decode(HookScriptValue.self, forKey: .preautogc)
             self.postrewrite = try? container.decode(HookScriptValue.self, forKey: .postrewrite)
-            self.sendemailvalidate = try? container.decode(HookScriptValue.self, forKey: .sendemailvalidate)
+            self.sendemailvalidate = try? container.decode(
+                HookScriptValue.self, forKey: .sendemailvalidate)
         }
 
         func propertyValueForName(name: String) -> String {
-            let hookScriptValueToString: (HookScriptValue)->String = {
-                (value: HookScriptValue) -> String in
-                switch value {
-                case let .string(string):
-                    return string
-                case let .array(array):
-                    return array.reduce("") { (joined, string) in
-                        return joined + string + "\n"
+            let hookScriptValueToString: (HookScriptValue) -> String = {
+                    (value: HookScriptValue) -> String in
+                    switch value {
+                    case let .string(string):
+                        return string
+                    case let .array(array):
+                        return array.reduce("") { (joined, string) in
+                            return joined + string + "\n"
                         }.trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
                 }
-            }
 
             switch name {
             case "applypatchmsg":
@@ -239,6 +243,7 @@ public final class Captain {
 
     // MARK: - Private Properties
     private let arguments: [String]
+
     private let path: Path
     private let commandType: CommandType
 
@@ -320,11 +325,14 @@ public final class Captain {
             try clearHooks(type: type)
 
             do {
-                try hookFile.append(string: """
+                try hookFile.append(
+                    string:
+                        """
                     \(CAPTAIN_SCRIPTS_START_ID)
                     \(config.propertyValueForName(name: type.rawValue.replacingOccurrences(of: "-", with: "")))
                     \(CAPTAIN_SCRIPTS_END_ID)
-                    """)
+                    """
+                )
             } catch {
                 throw CaptainError.updateHookFileFailed
             }
@@ -353,22 +361,29 @@ public final class Captain {
     private func clearHooks(type: HookType) throws {
         let hookFile = try getHookFile(type: type)
         let hookFileDataString = try hookFile.readAsString()
-        let resultString = removeMatches(regex: "\(CAPTAIN_SCRIPTS_START_ID)\n(.+)\n\(CAPTAIN_SCRIPTS_END_ID)", options: .dotMatchesLineSeparators, text: hookFileDataString)
+        let resultString = removeMatches(
+            regex: "\(CAPTAIN_SCRIPTS_START_ID)\n(.+)\n\(CAPTAIN_SCRIPTS_END_ID)",
+            options: .dotMatchesLineSeparators, text: hookFileDataString)
         try hookFile.write(string: resultString)
     }
 
-    private func removeMatches(regex: String, options: NSRegularExpression.Options = [], text: String) -> String {
+    private func removeMatches(
+        regex: String, options: NSRegularExpression.Options = [], text: String
+    ) -> String {
         do {
             let regex = try NSRegularExpression(pattern: regex, options: options)
-            return regex.stringByReplacingMatches(in: text, range: NSRange(text.startIndex..., in: text), withTemplate: "")
+            return regex.stringByReplacingMatches(
+                in: text, range: NSRange(text.startIndex..., in: text), withTemplate: "")
         } catch {
             return text
         }
     }
 }
 
-private extension FileManager {
-    func changePermission(posixPersmittion: Int, path: String) throws {
-        try setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: posixPersmittion)], ofItemAtPath: path)
+extension FileManager {
+    fileprivate func changePermission(posixPersmittion: Int, path: String) throws {
+        try setAttributes(
+            [FileAttributeKey.posixPermissions: NSNumber(value: posixPersmittion)],
+            ofItemAtPath: path)
     }
 }

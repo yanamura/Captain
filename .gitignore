@@ -2,5 +2,4 @@
 /.build
 /Packages
 /*.xcodeproj
-
-Captain.config.json
+swift-format/
