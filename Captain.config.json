@@ -1,0 +1,7 @@
+{
+    "pre-commit": [
+        "swift run --package-path swift-format swift-format -r Sources -i",
+        "swift run --package-path swift-format swift-format -r Tests -i",
+        "git add ."
+     ]
+}

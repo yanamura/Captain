@@ -1,14 +1,17 @@
-import Foundation
-import XCTest
-@testable import CaptainCore
-import Tempry
 import Files
+import Foundation
+import Tempry
+import XCTest
+
+@testable import CaptainCore
 
 // MARK: - Helper Extensions for Test
 extension Captain {
     func extractHookScript(type: HookType, hookFile: File) throws -> [String] {
         let hookFileDataString = try hookFile.readAsString()
-        return try NSRegularExpression(pattern: "\(CAPTAIN_SCRIPTS_START_ID)\n(.+)\n\(CAPTAIN_SCRIPTS_END_ID)", options: .dotMatchesLineSeparators).extractMatches(text: hookFileDataString)
+        return try NSRegularExpression(
+            pattern: "\(CAPTAIN_SCRIPTS_START_ID)\n(.+)\n\(CAPTAIN_SCRIPTS_END_ID)", options: .dotMatchesLineSeparators)
+            .extractMatches(text: hookFileDataString)
     }
 }
 
@@ -73,11 +76,14 @@ class CaptainTests: XCTestCase {
 
     func test_override_install() {
         let hookFile = try! hooksFolder.createFile(named: "pre-commit")
-        try! hookFile.write(string: """
+        try! hookFile.write(
+            string:
+                """
         \(CAPTAIN_SCRIPTS_START_ID)
         Hello World
         \(CAPTAIN_SCRIPTS_END_ID)
-        """)
+        """
+        )
 
         try! configFile.write(string: "{\"pre-commit\": \"echo Hello\"}")
         let captain = Captain(arguments: ["", "install"], rootDir: currentDir.path)
@@ -91,11 +97,14 @@ class CaptainTests: XCTestCase {
 
     func test_uninstall() {
         let hookFile = try! hooksFolder.createFile(named: "pre-commit")
-        try! hookFile.write(string: """
+        try! hookFile.write(
+            string:
+                """
             \(CAPTAIN_SCRIPTS_START_ID)
             Hello World
             \(CAPTAIN_SCRIPTS_END_ID)
-            """)
+            """
+        )
 
         let captain = Captain(arguments: ["", "uninstall"], rootDir: currentDir.path)
         try! captain.run()
