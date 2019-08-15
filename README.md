@@ -46,7 +46,7 @@ create `Captain.config.json` onproject root directory.
 
 ```
 {
-  "pre-commit": "swiftformat ."
+  "pre-commit": "swift-format -r Sources -i"
 }
 ```
 
@@ -55,7 +55,7 @@ or
 ```
 {
   "pre-commit": [
-    "swiftformat .",
+    "swift-format -r Sources -i",
     "git add ."
   ]
 }
