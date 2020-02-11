@@ -88,9 +88,23 @@ or
 $ captain install
 ```
 
+### Using Swift Package Manager
+
+```
+/// Package.swift
+    dependencies: [
+        ...
+        .package(url: "https://github.com/yanamura/Captain"),
+    ]
+```
+
+```
+$ swift run -c release captain install
+```
+
 #### Using [Mint](https://github.com/yonaskolb/Mint)
 ```
-$ mint run yanamura/Captain "captain install"
+$ mint run yanamura/Captain captain install
 ```
 
 #### Using cloned repository
