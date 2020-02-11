@@ -32,17 +32,17 @@ executable binary will be created to ./build/release/captain
 ## Usage
 
 ### Configuration
-create `Captain.config.json` onproject root directory.
+create `.captain` onproject root directory.
 
 ```
 /ProjectDir
   /.git
   .gitignore
-  Captain.config.json
+  .captain
 ```
-.git directory and Captain.config.json file should be in same location.
+.git directory and .captain file should be in same location.
 
-#### Captain.config.json
+#### .captain
 
 ```
 {

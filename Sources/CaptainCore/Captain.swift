@@ -247,8 +247,12 @@ public final class Captain {
     private let path: Path
     private let commandType: CommandType
 
-    private var configPath: Path {
+    private var legacyConfigPath: Path {
         return path + "Captain.config.json"
+    }
+
+    private var configPath: Path {
+        return path + ".captain"
     }
 
     private var hookDirPath: Path {
@@ -311,6 +315,21 @@ public final class Captain {
                 throw CaptainError.invalidConfigData
             }
             return config
+        } else if legacyConfigPath.exists {
+                let configData: Data
+                do {
+                    configData = try legacyConfigPath.read()
+                } catch {
+                    throw CaptainError.configNotFound
+                }
+
+                let config: Config
+                do {
+                    config = try JSONDecoder().decode(Config.self, from: configData)
+                } catch {
+                    throw CaptainError.invalidConfigData
+                }
+                return config
         } else {
             throw CaptainError.configNotFound
         }

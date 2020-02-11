@@ -38,7 +38,7 @@ class CaptainTests: XCTestCase {
         let pathString = try! Tempry.directory()
         currentDir = try! Folder(path: pathString)
 
-        configFile = try! currentDir.createFile(named: "Captain.config.json")
+        configFile = try! currentDir.createFile(named: ".captain")
 
         let gitFolder = try! currentDir.createSubfolder(named: ".git")
         hooksFolder = try! gitFolder.createSubfolder(named: "hooks")
