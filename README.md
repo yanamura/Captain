@@ -5,10 +5,7 @@
     <img src="https://travis-ci.org/yanamura/Captain.svg?branch=master" alt="travis">
   </a>
   <a href="https://swift.org">
-    <img src="http://img.shields.io/badge/swift-4.2-brightgreen.svg" alt="Swift 4.2">
-  </a>
-  <a href="https://swift.org">
-    <img src="http://img.shields.io/badge/swift-5.0-brightgreen.svg" alt="Swift 5.0">
+    <img src="http://img.shields.io/badge/swift-5.1-brightgreen.svg" alt="Swift 5.1">
   </a>
 </p>
 
