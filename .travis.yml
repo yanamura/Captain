@@ -6,7 +6,6 @@ sudo: required
 osx_image: xcode11.6
 dist: bionic
 env:
-  - SWIFT_VERSION=5.0
   - SWIFT_VERSION=5.1
   - SWIFT_VERSION=5.2
 install:
