@@ -18,12 +18,19 @@ if you want to install globally, use [Mint](https://github.com/yonaskolb/Mint)
 ```
 $ mint install yanamura/Captain
 ```
-### build yourself
+### Using SwiftPackageManager
 ```
-$ git clone https://github.com/yanamura/Captain
-$ cd Captain
-$ swift build -c release
+/// Package.swift
+    dependencies: [
+        ...
+        .package(url: "https://github.com/yanamura/Captain"),
+    ]
 ```
+
+```
+$ swift build --package-path <path to Package.swift>  -c release
+```
+
 executable binary will be created to ./build/release/captain
 
 ## Usage
@@ -96,19 +103,12 @@ $ captain install
 ```
 
 ```
-$ swift run -c release captain install
+$ swift run --package-path <path to Package.swift>  -c release captain install
 ```
 
 #### Using [Mint](https://github.com/yonaskolb/Mint)
 ```
 $ mint run yanamura/Captain captain install
-```
-
-#### Using cloned repository
-```
-$ git clone https://github.com/yanamura/Captain
-$ cd Captain
-$ swift run captain install
 ```
 
 ### Unset Git Hooks
